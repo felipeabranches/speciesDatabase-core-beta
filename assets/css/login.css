@@ -1,0 +1,23 @@
+/*  --------------------------
+    Login
+    ----------------------- */
+.signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: 40px auto;
+}
+/*
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+*/

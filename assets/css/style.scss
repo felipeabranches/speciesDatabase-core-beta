@@ -1,0 +1,219 @@
+$red:   #dc3545;
+$green: #28a745;
+$blue:  #17a2b8;
+$dottedLineSpacing: 6;
+
+@mixin shadow() {
+    -webkit-box-shadow: 0 1px 4px 0 rgba(204, 204, 204, .5);
+       -moz-box-shadow: 0 1px 4px 0 rgba(204, 204, 204, .5);
+            box-shadow: 0 1px 4px 0 rgba(204, 204, 204, .5);
+}
+@mixin transition() {
+    -webkit-transition: all 0.3s ease-in-out;
+       -moz-transition: all 0.3s ease-in-out;
+        -ms-transition: all 0.3s ease-in-out;
+         -o-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+}
+
+@mixin dotted-line($color, $alignment) {
+    background-image: linear-gradient(to right, $color 0%, $color (100% / $dottedLineSpacing), transparent (100% / $dottedLineSpacing));
+    background-position: 0 $alignment;
+    background-repeat: repeat-x;
+    background-size: ($dottedLineSpacing + px) 1px;
+}
+@mixin dotted-line-vertical($color, $alignment) {
+    background-image: linear-gradient(to top, $color 0%, $color (100% / $dottedLineSpacing), transparent (100% / $dottedLineSpacing));
+    background-position: $alignment 0;
+    background-repeat: repeat-y;
+    background-size: 1px ($dottedLineSpacing + px);
+}
+
+/*  ------------------------------------
+    GLOBALS
+    --------------------------------  */
+body {
+    margin-top: 56px;
+}
+abbr {
+    font-style: normal !important;
+    font-weight: inherit;
+}
+
+/*  ------------------------------------
+    ADMIN
+    --------------------------------  */
+/*
+ *  Toolbar
+ */
+.toolbar {
+    background: #fff;
+    @include shadow();
+    top: 56px;
+    
+    a,
+    button {
+        margin-left: .5rem;
+    }
+    .fas {
+        font-size: .8rem;
+        margin-right: .8rem;
+    }
+}
+/*
+ *  Forms
+ */
+.form {
+    &-label {
+        margin-bottom: .5rem;
+    }
+    /*  toggle */
+    &-toggle {
+        overflow: hidden;
+
+        [id^="cover"] {
+            background-color: rgba(23, 162, 184, .3);
+            border-radius: 3px;
+            display: inline-flex;
+        }
+        input {
+            position: absolute !important;
+            clip: rect(0, 0, 0, 0);
+        }
+        label {
+            margin: 3px 0;
+            //@include transition;
+            
+            &:first-of-type {
+                margin-left: 3px;
+            }
+            &:last-of-type {
+                margin-right: 3px;
+            }
+        }
+        input:checked + label {
+            background-color: $blue;
+            color: #fff;
+        }
+        &.yesno {
+            [class^="yes"] {
+                background-color: rgba(40, 167, 69, .3);            
+            }
+            [class^="no"] {
+                background-color: rgba(220, 53, 69, .3);            
+            }
+            input:checked + label {
+                &[for^="yes"] {
+                    background-color: $green;
+                }
+                &[for^="no"] {
+                    background-color: $red;
+                }
+            }
+        }
+    }
+}
+/*
+ *  GPX
+ */
+.form-gpx {
+     background: #eee;
+     border-radius: 3px;
+     padding: 4px;
+}
+.gpx {
+    float: left;
+    font-size: 80%;
+    padding: 4px;
+
+    .title {
+        font-weight: bold;
+    }
+}
+/*
+ *  Icons
+ */
+.fa-toggle {
+    &-on {
+        color: $green;
+    }
+    &-off {
+        color: $red;
+    }
+}
+
+/*  ------------------------------------
+    SITE
+    --------------------------------  */
+/*
+ *  Species
+ */
+.species {
+    .nomenclature {
+        display: inline-block;
+    }
+    .authoring {
+        font-size: 1.5rem;
+    }
+}
+/*
+ * Card
+ */
+.card {
+    dt, dd {
+        position: relative;
+        float: left;
+    }
+    dt {
+        width: 40%;
+    }
+    dd {
+        width: 60%;
+    }
+}
+/*
+ *  Badges
+ */
+.badge {
+    /*  Basins */
+    &-brd {
+        background-color: #5fd99b;
+        color: #fff;
+    }
+    &-brsf {
+        background-color: #5f9dd9;
+        color: #fff;
+    }
+    &-extc {
+        background-color: #b32db3;
+        color: #fff;
+    }
+    /*  Piscis */
+    &-id {
+        background-color: #ff0;
+        font-style: italic;
+    }
+}
+.changed {
+    color:$red;
+    font-size: 75%;
+    font-style: italic;
+    font-weight: 700;
+}
+//  Keys
+.key {
+    &-desc {
+        background-color: #fff;
+        float: left;
+    }
+    &-opt {
+        text-align: right;
+        display: block;
+        @include dotted-line (#333, 1.1rem);
+        
+        a {
+            background-color: #fff;
+        }
+    }
+    
+}
