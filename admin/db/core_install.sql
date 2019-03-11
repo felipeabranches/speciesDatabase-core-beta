@@ -46,10 +46,9 @@ CREATE TABLE IF NOT EXISTS `modules` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-INSERT INTO `modules` (`id`, `name`, `type`, `params`, `block`, `client`, `order`, `published`, `created_at`, `updated_at`) VALUES
-(1, 'Taxa tree', 'taxa_tree', '{\"id\":1}', 'main', 1, 1, 1, NOW(), NULL),
-(2, 'Stats', 'file', '{\"file\":\"stats\"}', 'aside', 1, 1, 1, NOW(), NULL),
-(3, 'Synonyms', 'file', '{\"file\":\"synonyms\"}', 'species_details', 1, 1, 1, NOW(), NULL);
+INSERT INTO `modules` (`name`, `type`, `params`, `block`, `client`, `order`, `published`, `created_at`, `updated_at`) VALUES
+('Taxa tree', 'taxa_tree', '{\"id\":1}', 'main', 1, 1, 1, NOW(), NULL),
+('Synonyms', 'file', '{\"file\":\"synonyms\"}', 'species_details', 1, 1, 1, NOW(), NULL);
 
 -- --------------------------------------------------------
 
@@ -59,7 +58,7 @@ INSERT INTO `modules` (`id`, `name`, `type`, `params`, `block`, `client`, `order
 CREATE TABLE IF NOT EXISTS `systematics_badges` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(63) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
-  `type` varchar(63) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `badge_type` varchar(63) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `fields_slct` varchar(127) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `style_type` varchar(127) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `style_str` varchar(127) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
@@ -67,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `systematics_badges` (
   `published` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
-  UNIQUE KEY `type` (`type`)
+  UNIQUE KEY `badge_type` (`badge_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 INSERT INTO `systematics_badges` (`name`, `badge_type`, `fields_slct`, `style_type`, `style_str`, `order`, `published`) VALUES
