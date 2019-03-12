@@ -9,10 +9,10 @@ function taxa_recursive_tree($id)
 
     // Taxa
     $cols = array(
-        'tx.id id', 'tx.name name', 'tx.id_parent parentId', 'tx.id_type level',
-        'tt.name typeName'
+        'tx.id txID', 'tx.name name', 'tx.id_parent parentId', 'tx.id_type level',
+        'txtp.name typeName'
     );
-    $db->join('systematics_taxa_types tt', 'tx.id_type = tt.id', 'LEFT');
+    $db->join('systematics_taxa_types txtp', 'tx.id_type = txtp.id', 'LEFT');
     $db->where('tx.id_parent', $id);
     $db->where('tx.published', 1);
     $db->orderBy('tx.name', 'asc');
@@ -23,19 +23,13 @@ function taxa_recursive_tree($id)
         $i = 0;
         if ($i == 0) echo '<ul>';
         echo '<li><span class="badge badge-light">'.$taxon['name'].'</span>';
-        taxa_recursive_tree($taxon['id']);
+        taxa_recursive_tree($taxon['txID']);
 
         // Species
-        $cols = array(
-            'sp.id id', 'sp.image image',
-            'dist.status status'
-        );
-        $db->join('status_distributions dist', 'sp.id = dist.id_species', 'LEFT');
+        $cols = array('sp.id id', 'sp.image image');
         $db->where('sp.published', 1);
         $db->where('sp.validate', 1);
-        $db->where('dist.published', 1);
-        $db->where('dist.id_unit', 1);
-        $db->where('sp.id_taxon', $taxon['id']);
+        $db->where('sp.id_taxon', $taxon['txID']);
         $db->orderBy('sp.genus', 'asc');
         $db->orderBy('sp.species', 'asc');
         $species = $db->get('systematics_species sp', null, $cols);
@@ -48,7 +42,7 @@ function taxa_recursive_tree($id)
                 echo '<li>'."\n";
 
                 // Species class
-                require_once 'libraries/systematics/species.php';
+                require_once 'libraries/systematics/Species.php';
                 $species = new Species();
                 ?>
                 <!-- Nomenclature -->
@@ -63,7 +57,7 @@ function taxa_recursive_tree($id)
                 $db->where('bdg.published', 1);
                 $badges = $db->get('systematics_badges bdg', null);
                 foreach ($badges as $badge):
-                    include('badges/'.$badge['type'].'/index.php');
+                    include('badges/'.$badge['badge_type'].'/index.php');
                 endforeach;
                 ?>
 
