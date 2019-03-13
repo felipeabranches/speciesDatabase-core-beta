@@ -9,7 +9,7 @@ require_once BASE_PATH.'/libraries/MysqliDb/MysqliDb.php';
 require_once BASE_PATH.'/admin/helpers/helpers.php';
 
 //  Global vars
-$site_name = 'Peixes da Serra do Cipó - MG';
+$site_name = 'speciesDatabase';
 
 //  Meta vars
 $metaAuthor = 'speciesDatabase';
