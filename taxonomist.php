@@ -5,7 +5,7 @@ include_once 'config.php';
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
 // Taxonomists class
-require_once BASE_PATH.'/libraries/systematics/Taxonomists.php';
+require_once BASE_PATH.'/libraries/Systematics/Taxonomists.php';
 $taxonomist = new Taxonomists;
 $tt = $taxonomist->getTaxonomist($id);
 
@@ -59,7 +59,7 @@ $title = $page_title.' - '.$site_name;
         if ($sp):
             $spTotal = 0;
             // Species class
-            require_once BASE_PATH.'/libraries/systematics/Species.php';
+            require_once BASE_PATH.'/libraries/Systematics/Species.php';
             $species = new Species();
         ?>
         <div class="col-12 col-md-4">
