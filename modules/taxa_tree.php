@@ -42,7 +42,7 @@ function taxa_recursive_tree($id)
                 echo '<li>'."\n";
 
                 // Species class
-                require_once 'libraries/systematics/Species.php';
+                require_once 'libraries/Systematics/Species.php';
                 $species = new Species();
                 ?>
                 <!-- Nomenclature -->
