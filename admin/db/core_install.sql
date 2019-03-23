@@ -117,6 +117,8 @@ CREATE TABLE IF NOT EXISTS `systematics_taxa` (
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `image` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `published` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -136,6 +138,8 @@ CREATE TABLE IF NOT EXISTS `systematics_taxa_types` (
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `image` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `published` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
