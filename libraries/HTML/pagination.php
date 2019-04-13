@@ -23,11 +23,11 @@ class Pagination
                         ?>
 
                         <ul class="pagination">
-                           
+                                <?php if($page!=1):?>
                                 <a href="<?php echo $path_file; ?>.php<?php echo $http_query; ?>&page=<?php echo $page-1; ?>" class="page-link" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
-                            
+                                <?php endif;?>
                             <?php
                             for ($i = 1; $i <= $pagination; $i++)
                             {
@@ -35,10 +35,12 @@ class Pagination
                                 echo '<li class="page-item'.$li_class.'"><a href="'.$path_file.'.php'.$http_query.'&page='.$i.'" class="page-link">'.$i.'</a></li>';
                             }
                             ?>
-                            
+                                <?php if($page!=$pagination):?>
+                                
                                 <a href="<?php echo $path_file; ?>.php<?php echo $http_query; ?>&page=<?php echo $page+1; ?>" class="page-link" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
+                            <?php endif;?>
                             
                         </ul>
                     </nav>
