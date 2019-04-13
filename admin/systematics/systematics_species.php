@@ -7,6 +7,9 @@ require_once BASE_PATH.'/admin/includes/auth_validate.php';
 require_once BASE_PATH.'/libraries/systematics/species.php';
 $species = new Species();
 
+//Pagination class
+require_once BASE_PATH.'/libraries/HTML/pagination.php';
+$paginationClass = new Pagination();
 // Titles
 $page_title = 'Species';
 $title = $page_title.' - '.$site_name;
@@ -59,7 +62,8 @@ if ($order_dir)
 $db->pageLimit = $pagelimit;
 
 // Get result of the query.
-$result = $db->arraybuilder()->paginate('systematics_species sp', $page, $cols);
+$path_file='systematics_species';
+$result = $db->arraybuilder()->paginate($path_file.' sp', $page, $cols);
 $pagination = $db->totalPages;
 
 // Get columns for order filter
@@ -187,45 +191,9 @@ foreach ($result as $value) {
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-
-                <?php if ($pagination > 1): ?>
-                <!-- Pagination -->
-                <nav aria-label="<?php echo $page_title?> navigation">
-                    <?php
-                    if (!empty($_GET))
-                    {
-                        //we must unset $_GET[page] if previously built by http_build_query function
-                        unset($_GET['page']);
-                        //to keep the query sting parameters intact while navigating to next/prev page,
-                        $http_query = "?".http_build_query($_GET);
-                    }
-                    else
-                    {
-                        $http_query = "?";
-                    }
-                    ?>
-
-                    <ul class="pagination">
-                        <!--li class="page-item">
-                            <a href="systematics_species.php<?php echo $http_query; ?>&page=" class="page-link" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li-->
-                        <?php
-                        for ($i = 1; $i <= $pagination; $i++)
-                        {
-                            ($page == $i) ? $li_class = ' active' : $li_class = "";
-                            echo '<li class="page-item'.$li_class.'"><a href="systematics_species.php'.$http_query.'&page='.$i.'" class="page-link">'.$i.'</a></li>';
-                        }
-                        ?>
-                        <!--li class="page-item">
-                            <a href="systematics_species.php<?php echo $http_query; ?>&page=" class="page-link" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li-->
-                    </ul>
-                </nav>
-                <?php endif; ?>
+                <?php
+                $paginationClass->simplePagination($pagination,$path_file,$page_title,$page);
+                ?>
                 <?php endif; ?>
             </div>
         </div>
