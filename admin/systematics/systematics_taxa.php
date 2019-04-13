@@ -2,7 +2,9 @@
 session_start();
 require_once '../../config.php';
 require_once BASE_PATH.'/admin/includes/auth_validate.php';
-
+//PaginationClass
+require_once BASE_PATH.'/libraries/HTML/pagination.php';
+$paginationClass = new Pagination();
 // Titles
 $page_title = 'Taxa';
 $title = $page_title.' - '.$site_name;
@@ -34,16 +36,14 @@ if (!$order_dir)
 
 // Get DB instance. i.e instance of MYSQLiDB Library
 $db = getDbInstance();
-$cols = array('tx.id id', 'tx.name name', 'txtp.name type', 'prnt.name parent', 'tx.published published');
-$db->join('systematics_taxa_types txtp', 'txtp.id = tx.id_type', 'left');
-$db->join('systematics_taxa prnt', 'prnt.id = tx.id_parent', 'left');
+$cols = array('id', 'name', 'id_parent', 'published');
 $db->orderBy($order_by, $order_dir);
 
 // Start building query according to input parameters.
 // If search string
 if ($search_string)
 {
-    $db->where('tx.name', '%'.$search_string.'%', 'like');
+    $db->where('name', '%'.$search_string.'%', 'like');
 }
 
 // If order by option selected
@@ -56,7 +56,7 @@ if ($order_dir)
 $db->pageLimit = $pagelimit;
 
 // Get result of the query.
-$result = $db->arraybuilder()->paginate('systematics_taxa tx', $page, $cols);
+$result = $db->arraybuilder()->paginate('systematics_taxa', $page, $cols);
 $pagination = $db->totalPages;
 
 // Get columns for order filter
@@ -125,11 +125,10 @@ foreach ($result as $value) {
                     <caption><?php echo $page_title; ?></caption>
                     <thead>
                         <tr width="100%">
-                            <th width="5%"><a href="systematics_taxa.php?order_by=tx.id">ID</a></th>
-                            <th width="45%"><a href="systematics_taxa.php?order_by=tx.name">Name</a></th>
-                            <th width="22.5%"><a href="systematics_taxa.php?order_by=txtp.name">Type</a></th>
-                            <th width="22.5%"><a href="systematics_taxa.php?order_by=prnt.name">Parent</a></th>
-                            <th width="5%" colspan="2"><a href="systematics_taxa.php?order_by=tx.published">State</a></th>
+                            <th width="5%"><a href="systematics_taxa.php?order_by=id">ID</a></th>
+                            <th width="45%"><a href="systematics_taxa.php?order_by=name">Name</a></th>
+                            <th width="45%"><a href="systematics_taxa.php?order_by=id_parent">Parent</a></th>
+                            <th width="5%" colspan="2"><a href="systematics_taxa.php?order_by=published">State</a></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -137,8 +136,7 @@ foreach ($result as $value) {
                         <tr>
                             <td><?php echo $row['id']; ?></td>
                             <td><a href="systematics_taxon.php?task=edit&id=<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['name']); ?></a></td>
-                            <td><?php echo htmlspecialchars($row['type']); ?></td>
-                            <td><?php echo (!$row['parent']) ? '-' : htmlspecialchars($row['parent']); ?></td>
+                            <td><?php echo $row['id_parent']; ?></td>
                             <td><?php echo (!$row['published']) ? '<i class="fas fa-toggle-off"></i>' : '<i class="fas fa-toggle-on"></i>'; ?></td>
                             <td><a href="#" data-toggle="modal" data-target="#delete-<?php echo $row['id']; ?>"><i class="fas fa-trash"></i></a></td>
                         </tr>
@@ -168,46 +166,9 @@ foreach ($result as $value) {
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-
-                <?php if ($pagination > 1): ?>
-                <!-- Pagination -->
-                <nav aria-label="<?php echo $page_title?> navigation">
-                    <?php
-                    if (!empty($_GET))
-                    {
-                        //we must unset $_GET[page] if previously built by http_build_query function
-                        unset($_GET['page']);
-                        //to keep the query sting parameters intact while navigating to next/prev page,
-                        $http_query = "?".http_build_query($_GET);
-                    }
-                    else
-                    {
-                        $http_query = "?";
-                    }
-                    ?>
-
-                    <ul class="pagination">
-                        <!--li class="page-item">
-                            <a href="systematics_taxa.php<?php echo $http_query; ?>&page=" class="page-link" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li-->
-                        <?php
-                        for ($i = 1; $i <= $pagination; $i++)
-                        {
-                            ($page == $i) ? $li_class = ' active' : $li_class = "";
-                            echo '<li class="page-item'.$li_class.'"><a href="systematics_taxa.php'.$http_query.'&page='.$i.'" class="page-link">'.$i.'</a></li>';
-                        }
-                        ?>
-                        <!--li class="page-item">
-                            <a href="systematics_taxa.php<?php echo $http_query; ?>&page=" class="page-link" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li-->
-                    </ul>
-                </nav>
-                <?php endif; ?>
-                <?php endif; ?>
+                 <?php
+               $paginationClass->simplePagination($pagination,'systematics_taxa',$page_title,$page);
+                endif; ?>
             </div>
         </div>
     </div>
