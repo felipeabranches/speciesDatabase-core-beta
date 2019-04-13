@@ -2,6 +2,9 @@
 session_start();
 require_once '../../config.php';
 require_once BASE_PATH.'/admin/includes/auth_validate.php';
+//PaginationClass
+require_once BASE_PATH.'/libraries/HTML/pagination.php';
+$paginationClass = new Pagination();
 
 // Titles
 $page_title = 'Taxa Types';
@@ -163,45 +166,9 @@ foreach ($result as $value) {
                     </tbody>
                 </table>
 
-                <?php if ($pagination > 1): ?>
-                <!-- Pagination -->
-                <nav aria-label="<?php echo $page_title?> navigation">
-                    <?php
-                    if (!empty($_GET))
-                    {
-                        //we must unset $_GET[page] if previously built by http_build_query function
-                        unset($_GET['page']);
-                        //to keep the query sting parameters intact while navigating to next/prev page,
-                        $http_query = "?".http_build_query($_GET);
-                    }
-                    else
-                    {
-                        $http_query = "?";
-                    }
-                    ?>
-
-                    <ul class="pagination">
-                        <!--li class="page-item">
-                            <a href="systematics_taxa_types.php<?php echo $http_query; ?>&page=" class="page-link" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li-->
-                        <?php
-                        for ($i = 1; $i <= $pagination; $i++)
-                        {
-                            ($page == $i) ? $li_class = ' active' : $li_class = "";
-                            echo '<li class="page-item'.$li_class.'"><a href="systematics_taxa_types.php'.$http_query.'&page='.$i.'" class="page-link">'.$i.'</a></li>';
-                        }
-                        ?>
-                        <!--li class="page-item">
-                            <a href="systematics_taxa_types.php<?php echo $http_query; ?>&page=" class="page-link" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li-->
-                    </ul>
-                </nav>
-                <?php endif; ?>
-                <?php endif; ?>
+                <?php
+                $paginationClass->simplePagination($pagination,'systematics_taxa_types',$page_title,$page);
+                 endif; ?>
             </div>
         </div>
     </div>
