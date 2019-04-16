@@ -31,7 +31,7 @@ class Pagination
                 <?php for ($i = 1; $i <= $pagination; $i++): ?>
                 <li class="page-item<?php if ($page == $i) echo ' active'; ?>">
                     <a class="page-link" href="<?php echo $file_name; ?>.php<?php echo $http_query; ?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                </li>';
+                </li>
                 <?php endfor; ?>
                 <li class="page-item<?php if ($page == $pagination) echo ' disabled'; ?>">
                     <a class="page-link" href="<?php echo $file_name; ?>.php<?php echo $http_query; ?>&page=<?php echo $page+1; ?>"<?php if ($page == $pagination) echo ' tabindex="-1" aria-disabled="true"'; ?> aria-label="Next">
