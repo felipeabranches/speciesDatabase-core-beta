@@ -12,7 +12,7 @@ require_once BASE_PATH.'/libraries/HTML/pagination.php';
 $paginationClass = new Pagination();
 
 // Titles
-$file_name = 'systematics_taxa';
+$file_name = 'taxa';
 $page_name = 'Taxa';
 $title = $page_name.' - '.$site_name;
 
@@ -70,7 +70,7 @@ $db->orderBy($order_by, $order_dir);
 $db->pageLimit = $pagelimit;
 
 // Get result of the query.
-$result = $db->arraybuilder()->paginate($file_name.' tx', $page, $cols);
+$result = $db->arraybuilder()->paginate('systematics_taxa tx', $page, $cols);
 $pagination = $db->totalPages;
 ?>
 <!doctype html>

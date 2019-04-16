@@ -12,7 +12,7 @@ require_once BASE_PATH.'/libraries/HTML/pagination.php';
 $paginationClass = new Pagination();
 
 // Titles
-$file_name = 'systematics_species';
+$file_name = 'species';
 $page_name = 'Species';
 $title = $page_name.' - '.$site_name;
 
@@ -68,7 +68,7 @@ $db->orderBy($order_by, $order_dir);
 $db->pageLimit = $pagelimit;
 
 // Get result of the query.
-$result = $db->arraybuilder()->paginate($file_name.' sp', $page, $cols);
+$result = $db->arraybuilder()->paginate('systematics_species sp', $page, $cols);
 $pagination = $db->totalPages;
 ?>
 <!doctype html>

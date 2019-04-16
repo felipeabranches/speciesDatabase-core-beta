@@ -64,7 +64,7 @@ $db->orderBy($order_by, $order_dir);
 $db->pageLimit = $pagelimit;
 
 // Get result of the query.
-$result = $db->arraybuilder()->paginate($file_name.' tt', $page, $cols);
+$result = $db->arraybuilder()->paginate('systematics_taxonomists tt', $page, $cols);
 $pagination = $db->totalPages;
 ?>
 <!doctype html>
