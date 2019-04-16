@@ -18,12 +18,12 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSystematics" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Systematics</a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownSystematics">
-                    <a class="dropdown-item" href="<?php echo SYSCS; ?>systematics_species.php">Species</a>
+                    <a class="dropdown-item" href="<?php echo SYSCS; ?>species.php">Species</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="<?php echo SYSCS; ?>systematics_taxa.php">Taxa</a>
-                    <a class="dropdown-item" href="<?php echo SYSCS; ?>systematics_taxa_types.php">Taxa Types</a>
+                    <a class="dropdown-item" href="<?php echo SYSCS; ?>taxa.php">Taxa</a>
+                    <a class="dropdown-item" href="<?php echo SYSCS; ?>taxa_types.php">Taxa Types</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="<?php echo SYSCS; ?>systematics_taxonomists.php">Taxonomists</a>
+                    <a class="dropdown-item" href="<?php echo SYSCS; ?>taxonomists.php">Taxonomists</a>
                 </div>
             </li>
         </ul>
