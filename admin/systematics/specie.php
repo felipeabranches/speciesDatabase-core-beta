@@ -9,14 +9,86 @@ $task = filter_input(INPUT_GET, 'task', FILTER_SANITIZE_STRING);
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $NorE = (!$id) ? 'New' : 'Edit';
 
-// Titles
 $page_title = 'Species';
 $title = $NorE.' '.$page_title.' - '.$site_name;
 
-//If id variable is set and diferent of '0', get data to pre-populate the form.
+if ($id) $db = getDbInstance();
+
+// Handle update request. As the form's action attribute is set to the same script, but 'POST' method, 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+{
+    if (!$id)
+	{
+	    // Mass Insert Data. Keep "name" attribute in html form same as column name in mysql table.
+	    $data_to_db = array_filter($_POST);
+	    // Insert timestamp
+	    $data_to_db['created_at'] = date('Y-m-d H:i:s');
+
+        $db = getDbInstance();
+       
+       //image Upload
+       
+        $image = $_FILES['file']['tmp_name'];
+        $size = $_FILES['file']['size'];
+        $type = $_FILES['file']['type'];
+        $name = $_FILES['file']['name'];
+        $fp = fopen($image, "rb");
+        $content = fread($fp, $size);
+        $content = addslashes($content);
+        fclose($fp);
+        $data_to_db['image']=$name;
+        $data_to_db['image_content']=$content;
+
+	    $last_id = $db->insert('systematics_species', $data_to_db);
+	
+	    if ($last_id)
+	    {
+	    	$_SESSION['success'] = $page_title.' successfully '.$NorE;
+	        header('location: systematics_species.php');
+	    	exit();
+	    }
+	    else
+	    {
+	        echo 'insert failed: ' . $db->getLastError();
+	        exit();
+	    }
+	}
+	else
+	{
+	    // Get input data
+	    $data_to_db = filter_input_array(INPUT_POST);
+	    // Insert timestamp
+	    $data_to_db['updated_at'] = date('Y-m-d H:i:s');
+        //image Upload
+        $image = $_FILES['file']['tmp_name'];
+        $size = $_FILES['file']['size'];
+        $type = $_FILES['file']['type'];
+        $name = $_FILES['file']['name'];
+        $fp = fopen($image, "rb");
+        $content = fread($fp, $size);
+        $content = addslashes($content);
+        fclose($fp);
+        $data_to_db['image']=$name;
+        $data_to_db['image_content']=$content;
+        
+	    $db->where('id', $id);
+	    $stat = $db->update('systematics_species', $data_to_db);
+
+	    if($stat)
+	    {
+	    	$_SESSION['success'] = $page_title.' successfully '.$NorE;
+	        // Redirect to the listing page,
+	    	header('location: systematics_species.php');
+	    	// Important! Don't execute the rest put the exit/die. 
+
+	        exit();
+		}
+    }
+}
+
+//If edit variable is set, we are performing the update task.
 if($id)
 {
-    $db = getDbInstance();
     $db->where('id', $id);
     //Get data to pre-populate the form.
     $row = $db->getOne('systematics_species');
@@ -32,56 +104,9 @@ $etymology = !$id ? '' : $row['etymology'];
 $habitat = !$id ? '' : $row['habitat'];
 $distribution = !$id ? '' : $row['distribution'];
 $description = !$id ? '' : $row['description'];
-$note = !$id ? '' : $row['note'];
-$image = !$id ? '' : $row['image'];
 $published = !$id ? '' : $row['published'];
-
-// Handle update request. As the form's action attribute is set to the same script, but 'POST' method, 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') 
-{
-    if (!$id)
-	{
-	    // Mass Insert Data. Keep "name" attribute in html form same as column name in mysql table.
-	    $data_to_db = array_filter($_POST);
-	    // Insert timestamp
-	    //$data_to_db['created_at'] = date('Y-m-d H:i:s');
-
-        $db = getDbInstance();
-	    $last_id = $db->insert('systematics_species', $data_to_db);
-	
-	    if ($last_id)
-	    {
-	    	$_SESSION['success'] = $page_title.' successfully '.$NorE;
-	        header('location: species.php');
-	    	exit();
-	    }
-	    else
-	    {
-	        echo 'insert failed: ' . $db->getLastError();
-	        exit();
-	    }
-	}
-	else
-	{
-	    // Get input data
-	    $data_to_db = filter_input_array(INPUT_POST);
-	    // Insert timestamp
-	    $data_to_db['updated_at'] = date('Y-m-d H:i:s');
-	    // Performing the update task.
-        $db->where('id', $id);
-	    $stat = $db->update('systematics_species', $data_to_db);
-
-	    if($stat)
-	    {
-	    	$_SESSION['success'] = $page_title.' successfully '.$NorE;
-	        // Redirect to the listing page,
-	    	header('location: species.php');
-	    	// Important! Don't execute the rest put the exit/die. 
-
-	        exit();
-		}
-    }
-}
+$image = !$id ? '' : $row['image'];
+$note = !$id ? '' : $row['note'];
 ?>
 <!doctype html>
 <html lang="pt">
@@ -96,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 <h4 class="float-left"><?php echo (!$id) ? 'New' : 'Edit'; ?> <?php echo $page_title; ?></h4>
                 <div class="float-right">
                     <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-check"></i>Save</button>
-                    <a href="species.php" class="btn btn-outline-danger btn-sm" role="button"><i class="fas fa-times"></i>Cancel</a>
+                    <a href="systematics_species.php" class="btn btn-outline-danger btn-sm" role="button"><i class="fas fa-times"></i>Cancel</a>
                 </div>
             </div>
         </div>
@@ -116,13 +141,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                             <?php $field->select('Dubious species', 'dubious', array(1 => 'aff.', 2 => 'cf.', 3 => 'sp.'), 'systematics_species', $id, 0, '<option name="no" value="0">-- No --</option>', 0); ?>
                         </div>
                         <div class="col-12 col-md-8">
-                            <?php $field->selectDB('Taxon', 'id_taxon', $id_taxon, 'name', 'systematics_taxa', 'systematics_species', 'name', '<option>-- Choose --</option>', 1); ?>
+                            <?php $field->selectDB('Taxon', 'id_taxon', $id, 'name', 'systematics_taxa', 'systematics_species', 'id', 'name', '<option>-- Choose --</option>', 1); ?>
                         </div>
                         <div class="col-12 col-md-4">
                             <?php $field->radioToggle('<em>Incertae Sedis</em>', 'incertae_sedis', array(1 => 'yes', 0 => 'no'), 'systematics_species', $id, 0, 'yesno'); ?>
                         </div>
                         <!--div class="col-12 col-md-8">
-                            <?php $field->selectDB('Taxonomists', 'id_taxonomist', $id, 'name', 'systematics_taxonomists', 'systematics_taxonomists_map', 'name', '<option>-- None --</option>', 0, 1); ?>
+                            <?php $field->selectDB('Taxonomists', 'id_taxonomist', $id, 'name', 'systematics_taxonomists', 'systematics_taxonomists_map', 'id_species', 'name', '<option>-- None --</option>', 0, 1); ?>
                         </div-->
                         <div class="col-12 col-md-4">
                             <?php $field->radioToggle('Revised', 'revised', array(1 => 'yes', 0 => 'no'), 'systematics_species', $id, 0, 'yesno'); ?>
@@ -134,7 +159,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                     <?php $field->textarea('Description', 'description', $description, '', ''); ?>
                 </div>
             </div>
-            <!-- Aside -->
             <div class="col-12 col-md-4">
                 <div class="my-3 p-3 bg-white rounded box-shadow">
                     <h5>State</h5>
@@ -143,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 </div>
                 <div class="my-3 p-3 bg-white rounded box-shadow">
                     <h5>Media</h5>
-                    <?php $field->text('Image', 'image', $image, 'Enter the Image path', ''); ?>
+                    <?php $field->file('Image', 'image', $image, 'Enter the Image path', ''); ?>
                 </div>
                 <div class="my-3 p-3 bg-white rounded box-shadow">
                     <h5>Others</h5>
@@ -152,8 +176,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                     <?php $field->textarea('Habitat', 'habitat', $habitat, ''); ?>
                     <?php $field->textarea('Distribution', 'distribution', $distribution, ''); ?>
                     <?php $field->radioToggle('Validate', 'validate', array(1 => 'accepted', 0 => 'synonym'), 'systematics_species', $id, 1, ''); ?>
-                    <?php $field->selectDB('Redirect', 'redirect', $redirect, 'CONCAT(genus, " ", species)', 'systematics_species', 'systematics_species', 'genus, species', '<option value="0">-- Choose --</option>'); ?>
-                    <?php $field->text('Note', 'note', $note, 'Enter some Notes', ''); ?>
+                    <?php $field->selectDB('Redirect', 'redirect', $id, 'CONCAT(genus, " ", species)', 'systematics_species', 'systematics_species', 'id', 'genus, species', '<option value="0">-- Choose --</option>'); ?>
+                    <?php $field->text('Note', 'note', $note, 'Enter some notes...', ''); ?>
                 </div>
             </div>
         </div>
@@ -168,15 +192,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     });
 
     $(document).ready(function(){
-        $('#species_form').validate({
-            rules: {
-                genus: {
-                    required: true,
-                    minlength: 3
-                }
-            }
-        });
-    });
+	   $('#species_form').validate({
+	       rules: {
+	            genus: {
+	                required: true,
+	                minlength: 3
+	            }
+	        }
+	    });
+	});
 </script>
 <?php include BASE_PATH.'/modules/footer.php'; ?>
 </body>
