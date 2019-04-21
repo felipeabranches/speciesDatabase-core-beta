@@ -196,5 +196,15 @@ class Fields
         </div>
         <?php
     }
+
+     function file ($label, $field, $value, $placeholder, $attributes)
+    {
+        ?>
+        <div class="form-group">
+            <label for="<?php echo $field; ?>"><?php echo $label; ?><?php if ($attributes == 'required') echo ' *'; ?></label>
+            <input type="file" class="form-control" name="file" id="<?php echo $field; ?>" aria-describedby="<?php echo $field; ?>Help" value="<?php echo $value; ?>" placeholder="<?php echo $placeholder; ?>"<?php if ($attributes) echo ' '.$attributes; ?>>
+        </div>
+        <?php
+    }
 }
 ?>
