@@ -27,7 +27,7 @@ class Taxonomists
         $db = getDbInstance();
 
         // Query
-        $cols = array ('tt.id id', 'tt.name name', 'tt.description description', 'tt.note note', 'tt.image image', 'tt.published published');
+        $cols = array ('tt.id id', 'tt.name name', 'tt.description description', 'tt.note note', 'tt.image image','tt.image_content image_content', 'tt.published published');
         $taxonomists = $db->get('systematics_taxonomists tt', null, $cols);
 
         if (!$taxonomists)
@@ -46,7 +46,7 @@ class Taxonomists
         $db = getDbInstance();
 
         // Query
-        $cols = array ('tt.id id', 'tt.name name', 'tt.description description', 'tt.note note', 'tt.image image', 'tt.published published');
+        $cols = array ('tt.id id', 'tt.name name', 'tt.description description', 'tt.note note', 'tt.image image','tt.image_content image_content', 'tt.published published');
         $db->where('tt.published', 1);
         $db->where('tt.id', $id);
         $taxonomist = $db->getOne('systematics_taxonomists tt', $cols);
