@@ -95,11 +95,9 @@ CREATE TABLE IF NOT EXISTS `systematics_species` (
   `description` varchar(5120) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `image` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `image_content` LONGBLOB NOT NULL,
   `published` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -118,7 +116,6 @@ CREATE TABLE IF NOT EXISTS `systematics_taxa` (
   `description` varchar(5120) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `image` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `image_content` LONGBLOB NOT NULL,
   `published` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -140,7 +137,6 @@ CREATE TABLE IF NOT EXISTS `systematics_taxa_types` (
   `description` varchar(5120) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `image` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `image_content` LONGBLOB NOT NULL,
   `published` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -158,7 +154,6 @@ CREATE TABLE IF NOT EXISTS `systematics_taxonomists` (
   `description` varchar(5120) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `image` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
-  `image_content` LONGBLOB NOT NULL,
   `published` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -216,3 +211,4 @@ CREATE TABLE `users_types` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
+

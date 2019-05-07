@@ -14,13 +14,13 @@ $title = $NorE.' '.$page_title.' - '.$site_name;
 
 // If non-super user accesses this script via url. Stop the exexution
 // Only super admin is allowed to access this page
-if ($_SESSION['user_type'] !== 'super')
+/*if ($_SESSION['user_type'] !== 'super')
 {
 	// show permission denied message
 	echo 'Permission Denied';
 	exit();
 }
-
+*/
 //Serve POST request.
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {

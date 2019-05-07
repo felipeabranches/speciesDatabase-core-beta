@@ -1,7 +1,8 @@
 <?php
 session_start();
 require_once '../config.php';
-require_once BASE_PATH.'/admin/includes/auth_validate.php';
+
+//require_once BASE_PATH.'/admin/includes/auth_validate.php';
 
 $page_title = 'Admin Panel';
 $title = $page_title.' - '.$site_name;

@@ -13,4 +13,3 @@ Configuration
 - Bootstrap 4.3.1 https://getbootstrap.com/
 - Font Awesome 4.7.10 https://fontawesome.com/
 - Tiny MCE https://www.tiny.cloud/
-- MysqliDb https://github.com/ThingEngineer/PHP-MySQLi-Database-Class
