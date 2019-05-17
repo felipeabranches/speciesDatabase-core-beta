@@ -3,6 +3,7 @@ session_start();
 require_once '../../config.php';
 require_once BASE_PATH.'/admin/includes/auth_validate.php';
 require_once BASE_PATH.'/libraries/HTML/Fields.php';
+require_once BASE_PATH.'/libraries/HTML/Image.php';
 $field = new Fields;
 
 $task = filter_input(INPUT_GET, 'task', FILTER_SANITIZE_STRING);
@@ -35,7 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         $content = file_get_contents($image,$flags = FILE_BINARY,null,0,$size); //Read the file as binary and save it on $content
         
         $data_to_db['image']=$name;
-        $data_to_db['image_content']=$content;
+        if(!empty($content))
+            $data_to_db['image_content']=$content;
 	    $last_id = $db->insert('systematics_taxonomists', $data_to_db);
 	
 	    if ($last_id)
@@ -67,8 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 
         $content = file_get_contents($image,$flags = FILE_BINARY,null,0,$size); //Read the file as binary and save it on $content
 
-        $data_to_db['image']=$name;
-        $data_to_db['image_content']=$content;
+        if($image!=null){
+            $data_to_db['image']=$name;
+            $data_to_db['image_content']=$content;
+        }
 	    $stat = $db->update('systematics_taxonomists', $data_to_db);
 
 	    if($stat)
@@ -134,10 +138,11 @@ $note = !$id ? '' : $row['note'];
                 </div>
                 <div class="my-3 p-3 bg-white rounded box-shadow">
                     <h5>Media</h5>
-
-                    <!-- <img class = "img-thumbnail" src = "../images/images.jpg"> -->
-                 <!-- <?php echo '<img src="data:image/jpeg;base64,'.base64_encode( $row['image_content'] ).'"/>' ; ?> -->
-
+                        <!-- Add image preview -->
+                    
+                    <?php
+                     if($image_content) //Show image if existent
+                     showImage("card-img-top",$row['image_content'],$row['name']); ?>
                     <?php $field->file( "Image", 'image', $image, 'Enter the Image path', ''); ?>
                 </div>
                 <div class="my-3 p-3 bg-white rounded box-shadow">
