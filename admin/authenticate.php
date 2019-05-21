@@ -12,15 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$db->where("username", $username);
 
 	$row = $db->get('users_accounts');
-
 	if ($db->count >= 1) {
 
 		$db_password = $row[0]['password'];
 		$user_id = $row[0]['id'];
-
 		if (password_verify($password, $db_password)) {
 
-			$_SESSION['user_logged_in'] = TRUE;
+			$_SESSION['user_logged_in'] = true;
 			$_SESSION['user_type'] = $row[0]['user_type'];
 
 			if ($remember) {
@@ -51,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			header('Location:index.php');
 
 		} else {
-			$_SESSION['login_failure'] = "Invalid user name or password";
+			$_SESSION['login_failure'] = "intval(var)id user name or password";
 			header('Location:login.php');
 		}
 

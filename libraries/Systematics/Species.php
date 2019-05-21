@@ -150,7 +150,7 @@ class Species
         $db = getDbInstance();
         
         // Query
-        $cols = array('sp.etymology etymology', 'sp.common_name common_name', 'sp.distribution distribution', 'sp.habitat habitat', 'sp.description description', 'sp.note note', 'sp.image image');
+        $cols = array('sp.etymology etymology', 'sp.common_name common_name', 'sp.distribution distribution', 'sp.habitat habitat', 'sp.description description', 'sp.note note', 'sp.image image', 'sp.image_content image_content');
         $db->where('sp.id', $id);
         $details = $db->getOne('systematics_species sp', null, $cols);
 

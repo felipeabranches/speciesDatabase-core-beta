@@ -1,5 +1,6 @@
 <?php
 include_once 'config.php';
+include_once 'libraries/HTML/Image.php'; //Including image functions for HTML
 
 /*
 $id = $_GET['id'];
@@ -9,17 +10,17 @@ include_once 'libraries/systematics/taxonomists.php';
 $taxonomists = new Taxonomists;
 $result = mysqli_query($mysqli, $taxonomists->getTaxonomists($id, $order_by,$filter_by));
 */
-
 // Connect to DB
 $db = getDbInstance();
 
 // Query
-$cols = array ('tt.id id', 'tt.name name', 'tt.description description', 'tt.note note', 'tt.image image', 'tt.published published');
+$cols = array ('tt.id id', 'tt.name name', 'tt.description description', 'tt.note note', 'tt.image image','tt.image_content image_content', 'tt.published published');
 $taxonomists = $db->get('systematics_taxonomists tt', null, $cols);
 
 // Titles
 $page_title = 'Taxonomists';
 $title = $page_title.' - '.$site_name;
+
 ?>
 <!doctype html>
 <html lang="pt">
@@ -41,8 +42,13 @@ $title = $page_title.' - '.$site_name;
         <?php foreach ($taxonomists as $row): ?>
         <div class="col-12 col-md-3">
             <div class="card mt-3 mb-3">
-                <?php if ($row['image'] && file_exists($row['image'])): ?>
-                <img class="card-img-top" src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
+                <?php if ($row['image']/* &&    file_exists($row['image'])*/ ): ?>                
+                
+                <!-- <img class="card-img-top" src=" <?php echo 'data:image/jpeg;base64,'.base64_encode( $row['image_content'] ).''; ?> " alt="<?php echo $row['name']; ?>"> -->
+                <!-- AQUIII -->
+                <?php showImage("card-img-top",$row['image_content'],$row['name']); ?>
+                
+
                 <?php endif; ?>
                 <div class="card-header">
                     <h5 class="float-left"><?php echo $row['name']; ?></h5>

@@ -2,7 +2,7 @@
 include_once 'config.php';
 
 // Species class
-require_once BASE_PATH.'/libraries/Systematics/Species.php';
+require_once BASE_PATH.'/libraries/systematics/species.php';
 $species = new Species();
 
 // Get ID from URL
