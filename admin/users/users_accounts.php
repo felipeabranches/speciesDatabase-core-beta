@@ -8,14 +8,14 @@ $page_title = 'Users Accounts';
 $title = $page_title.' - '.$site_name;
 
 //Only super admin is allowed to access this page
-if ($_SESSION['user_type'] !== 'super')
+/*if ($_SESSION['user_type'] !== 'super')
 {
     // show permission denied message
     header('HTTP/1.1 401 Unauthorized', true, 401);
     
     exit("401 Unauthorized");
 }
-
+*/
 // Get Input data from query string
 $search_string = filter_input(INPUT_GET, 'search_string');
 $order_by = filter_input(INPUT_GET, 'order_by');

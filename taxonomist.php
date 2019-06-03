@@ -1,5 +1,6 @@
 <?php
 include_once 'config.php';
+include_once 'libraries/HTML/Image.php'; //Including image functions for HTML
 
 // URL parameters
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
@@ -12,6 +13,7 @@ $tt = $taxonomist->getTaxonomist($id);
 // Titles
 $page_title = (!$tt) ? 'No Taxonomist' : $tt['name'];
 $title = $page_title.' - '.$site_name;
+
 ?>
 <!doctype html>
 <html lang="pt">
@@ -39,9 +41,11 @@ $title = $page_title.' - '.$site_name;
         <?php else: ?>
         <div class="col-12 col-md-4">
             <div class="my-3 p-3 bg-white rounded box-shadow">
-                <?php if ($tt['image'] && file_exists($tt['image'])): ?>
+                <?php if ($tt['image'] /*&& file_exists($tt['image'])*/): ?>
                 <figure class="figure">
-                    <img src="<?php echo $tt['image']; ?>" alt="<?php echo $tt['name']; ?>" class="figure-img img-fluid rounded">
+
+                    <?php showImage("figure-img img-fluid rounded",$tt['image_content'],$tt['name']);?>
+
                     <figcaption class="figure-caption">Foto: Nome, Ano (arquivo.JPG)</figcaption>
                 </figure>
                 <?php endif; ?>
@@ -59,7 +63,7 @@ $title = $page_title.' - '.$site_name;
         if ($sp):
             $spTotal = 0;
             // Species class
-            require_once BASE_PATH.'/libraries/Systematics/Species.php';
+            require_once BASE_PATH.'/libraries/systematics/Species.php';
             $species = new Species();
         ?>
         <div class="col-12 col-md-4">
