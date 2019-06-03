@@ -3,6 +3,7 @@ session_start();
 require_once '../../config.php';
 require_once BASE_PATH.'/admin/includes/auth_validate.php';
 require_once BASE_PATH.'/libraries/HTML/Fields.php';
+require_once BASE_PATH.'/libraries/HTML/Image.php';
 $field = new Fields;
 
 $task = filter_input(INPUT_GET, 'task', FILTER_SANITIZE_STRING);
@@ -31,14 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         $size = $_FILES['file']['size'];
         $type = $_FILES['file']['type'];
         $name = $_FILES['file']['name'];
-        $fp = fopen($image, "rb");
-        $content = fread($fp, $size);
-        $content = addslashes($content);
-        fclose($fp);
+        
+        $content = file_get_contents($image,$flags = FILE_BINARY,null,0,$size); //Read the file as binary and save it on $content
+        
         $data_to_db['image']=$name;
-        $data_to_db['image_content']=$content;
-
-	    $last_id = $db->insert('systematics_taxa_types', $data_to_db);
+        if(!empty($content))
+            $data_to_db['image_content']=$content;
+        $last_id = $db->insert('systematics_taxa_types', $data_to_db);
+         //moving file
+        $extesion = pathinfo($name,PATHINFO_EXTENSION);
+        $newName=uniqid().".$extesion";
+        $path = "../images/";
+        move_uploaded_file($image,$path.$newName);
 	
 	    if ($last_id)
 	    {
@@ -60,20 +65,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 	    $data_to_db['updated_at'] = date('Y-m-d H:i:s');
 
 	    $db->where('id', $id);
-        //image Upload
+               //image Upload
        
         $image = $_FILES['file']['tmp_name'];
         $size = $_FILES['file']['size'];
         $type = $_FILES['file']['type'];
         $name = $_FILES['file']['name'];
-        $fp = fopen($image, "rb");
-        $content = fread($fp, $size);
-        $content = addslashes($content);
-        fclose($fp);
+        $content = file_get_contents($image,$flags = FILE_BINARY,null,0,$size); //Read the file as binary and save it on $content
+        
         $data_to_db['image']=$name;
-        $data_to_db['image_content']=$content;
-
+        
+        if(!empty($content))
+            $data_to_db['image_content']=$content;
 	    $stat = $db->update('systematics_taxa_types', $data_to_db);
+         //moving file
+        $extesion = pathinfo($name,PATHINFO_EXTENSION);
+        $newName=uniqid().".$extesion";
+        $path = "../images/";
+        move_uploaded_file($image,$path.$newName);
 
 	    if($stat)
 	    {
@@ -99,6 +108,7 @@ $name = !$id ? '' : $row['name'];
 $description = !$id ? '' : $row['description'];
 $published = !$id ? '' : $row['published'];
 $image = !$id ? '' : $row['image'];
+$image_content = !$id ? '' : $row['image_content'];
 $note = !$id ? '' : $row['note'];
 ?>
 <!doctype html>
@@ -136,6 +146,9 @@ $note = !$id ? '' : $row['note'];
                 </div>
                 <div class="my-3 p-3 bg-white rounded box-shadow">
                     <h5>Media</h5>
+                    <?php
+                     if($image_content) //Show image if existent
+                     showImage("card-img-top",$row['image_content'],$row['name']); ?>
                     <?php $field->file('Image', 'image', $image, 'Enter the Image path', ''); ?>
                 </div>
                 <div class="my-3 p-3 bg-white rounded box-shadow">

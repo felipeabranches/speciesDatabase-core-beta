@@ -19,13 +19,57 @@ if ($id) $db = getDbInstance();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') 
 {
     if (!$id)
-	{
-	    // Mass Insert Data. Keep "name" attribute in html form same as column name in mysql table.
-	    $data_to_db = array_filter($_POST);
-	    // Insert timestamp
-	    $data_to_db['created_at'] = date('Y-m-d H:i:s');
+    {
+        // Mass Insert Data. Keep "name" attribute in html form same as column name in mysql table.
+        $data_to_db = array_filter($_POST);
+        // Insert timestamp
+        $data_to_db['created_at'] = date('Y-m-d H:i:s');
 
         $db = getDbInstance();
+        //image Upload
+       
+        $image = $_FILES['file']['tmp_name'];
+        $size = $_FILES['file']['size'];
+        $type = $_FILES['file']['type'];
+        $name = $_FILES['file']['name'];
+         //moving file
+        $extesion = pathinfo($name,PATHINFO_EXTENSION);
+        $newName=uniqid().".$extesion";
+        $path = "../images/";
+        move_uploaded_file($image,$path.$newName);
+        
+        $content = file_get_contents($image,$flags = FILE_BINARY,null,0,$size); //Read the file as binary and save it on $content
+        
+        $data_to_db['image']=$name;
+        if(!empty($content))
+            $data_to_db['image_content']=$content;
+        $last_id = $db->insert('systematics_taxonomists', $data_to_db);
+         //moving file
+        $extesion = pathinfo($name,PATHINFO_EXTENSION);
+        $newName=uniqid().".$extesion";
+        $path = "../images/";
+        move_uploaded_file($image,$path.$newName);
+    
+        if ($last_id)
+        {
+            $_SESSION['success'] = $page_title.' successfully '.$NorE;
+            header('location: systematics_taxonomists.php');
+            exit();
+        }
+        else
+        {
+            echo 'insert failed: ' . $db->getLastError();
+            exit();
+        }
+    }
+    else
+    {
+        // Get input data
+        $data_to_db = filter_input_array(INPUT_POST);
+        // Insert timestamp
+        $data_to_db['updated_at'] = date('Y-m-d H:i:s');
+
+        $db->where('id', $id);
         //image Upload
        
         $image = $_FILES['file']['tmp_name'];
@@ -36,54 +80,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         $content = file_get_contents($image,$flags = FILE_BINARY,null,0,$size); //Read the file as binary and save it on $content
         
         $data_to_db['image']=$name;
+        
         if(!empty($content))
             $data_to_db['image_content']=$content;
-	    $last_id = $db->insert('systematics_taxonomists', $data_to_db);
-	
-	    if ($last_id)
-	    {
-	    	$_SESSION['success'] = $page_title.' successfully '.$NorE;
-	        header('location: systematics_taxonomists.php');
-	    	exit();
-	    }
-	    else
-	    {
-	        echo 'insert failed: ' . $db->getLastError();
-	        exit();
-	    }
-	}
-	else
-	{
-	    // Get input data
-	    $data_to_db = filter_input_array(INPUT_POST);
-	    // Insert timestamp
-	    $data_to_db['updated_at'] = date('Y-m-d H:i:s');
 
-	    $db->where('id', $id);
-        //image Upload
-       
-        $image = $_FILES['file']['tmp_name'];
-        $size = $_FILES['file']['size'];
-        $type = $_FILES['file']['type'];
-        $name = $_FILES['file']['name'];
+        $stat = $db->update('systematics_taxonomists', $data_to_db);
+         //moving file
+        $extesion = pathinfo($name,PATHINFO_EXTENSION);
+        $newName=uniqid().".$extesion";
+        $path = "../images/";
+        move_uploaded_file($image,$path.$newName);
 
-        $content = file_get_contents($image,$flags = FILE_BINARY,null,0,$size); //Read the file as binary and save it on $content
+        if($stat)
+        {
+            $_SESSION['success'] = $page_title.' successfully '.$NorE;
+            // Redirect to the listing page,
+            header('location: systematics_taxonomists.php');
+            // Important! Don't execute the rest put the exit/die. 
 
-        if($image!=null){
-            $data_to_db['image']=$name;
-            $data_to_db['image_content']=$content;
+            exit();
         }
-	    $stat = $db->update('systematics_taxonomists', $data_to_db);
-
-	    if($stat)
-	    {
-	    	$_SESSION['success'] = $page_title.' successfully '.$NorE;
-	        // Redirect to the listing page,
-	    	header('location: systematics_taxonomists.php');
-	    	// Important! Don't execute the rest put the exit/die. 
-
-	        exit();
-		}
     }
 }
 
@@ -162,15 +178,15 @@ $note = !$id ? '' : $row['note'];
     });
 
     $(document).ready(function(){
-	   $('#taxonomist_form').validate({
-	       rules: {
-	            name: {
-	                required: true,
-	                minlength: 3
-	            }
-	        }
-	    });
-	});
+       $('#taxonomist_form').validate({
+           rules: {
+                name: {
+                    required: true,
+                    minlength: 3
+                }
+            }
+        });
+    });
 </script>
 <?php include BASE_PATH.'/modules/footer.php'; ?>
 </body>
